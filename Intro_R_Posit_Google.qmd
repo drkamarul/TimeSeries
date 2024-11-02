@@ -18,6 +18,7 @@ format:
     number-sections: true
     colorlinks: true
 self-contained: true
+embed-resources: true
 editor_options: 
   markdown: 
     wrap: 72
