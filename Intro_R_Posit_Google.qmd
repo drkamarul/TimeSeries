@@ -1,0 +1,323 @@
+---
+title: "Introduction to Posit, R and RStudio IDE"
+subtitle: "Workshop Guide"
+author: 
+  - Kamarul Imran Musa
+  - Jason Ng
+date: last-modified
+format:
+  html:
+    toc: true
+    toc-location: left
+    code-fold: false
+    theme: 
+      light: cosmo
+      dark: [cosmo, theme-dark.scss]
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
+self-contained: true
+editor_options: 
+  markdown: 
+    wrap: 72
+execute:
+  message: false
+  warning: false
+  keep-md: true
+---
+
+\newpage
+
+# Introduction to Posit Cloud, R and RStudio IDE
+
+## Posit Cloud
+
+Posit Cloud lets you access Posit’s powerful [set of data science
+tools](https://posit.co/products/cloud/cloud/) right in your browser–no
+installation or complex configuration required.
+
+### Register for free Posit Cloud account and access our course
+
+Steps:
+
+-   Click POSIT Cloud folder for our workshop at this
+    [link](https://posit.cloud/spaces/571287/join?access_code=oTpeMSBq9BqTHaGGZTqTTnGwAm8Fmu7jxcv7Doj9)
+-   Proceed with registration if required
+
+![Free registration](posit.png){width="60%"}
+
+### Join the space
+
+![Join the space](space.png){width="70%"}
+
+-   Go to Members area
+
+![Your workspace](images/ts.png)
+
+-   Create new **RStudio project**
+
+![Create a new RStudio project](rstudioproject.png){width="70%"}
+
+-   RStudio interface
+
+![RStudio interface](images/ts_project.png)
+
+## R Programming Language
+
+There are some terms we have to be familiar:
+
+-   packages
+-   codes
+-   parameters
+-   argument
+
+### R packages
+
+R codes are contained with a package. CRAN provides the list of all R
+packages.
+
+-   It is accessible at [CRAN
+    webpage](https://cran.r-project.org/web/packages/available_packages_by_name.html)
+-   There at (of 10 July 2023) almost 20000 R packages listed on [CRAN
+    packages webpage](https://cran.r-project.org/web/packages/)
+-   Look at [CRAN TaskViews](https://cran.r-project.org/web/views/) if
+    you want to know R packages that are grouped based on certain topics
+    such as Bayesian, Causal Inference, Epidemiology and many others.
+-   There are also many more packages that are not listed on CRAN but
+    hosted on other repositories such as GitHub.
+
+If you need to use certain R packages, you have to install it first.
+There are two ways of installing R packages into your R IDE:
+
+-   Writing codes in R Console: Type
+    `install.packages("nlme", dependencies = TRUE)`, then click ENTER
+
+![Install R package](installpackage2.png){width="70%"}
+
+-   Using GUI in the `Package` pane
+
+![Install R package](installpackage.png){width="70%"}
+
+-   install these packages
+
+    -   `fpp3`
+
+    -   `tidyverse`
+
+![Install required packages](images/install.png)
+
+### R functions
+
+We have to write R scripts to perform desired task in R. R scripts
+consists a set of R codes. Users write R scrips in the Console pane or
+in R Script file or other R editor such as Quarto or R Markdown
+document.
+
+Some simple codes as examples:
+
+`ChickWeight[1:20,]`
+
+`lm(weight ~ Time, data = ChickWeight)`
+
+```{r}
+ChickWeight[1:20,]
+lm(weight ~ Time, data = ChickWeight)
+```
+
+### Arguments in R functions
+
+Now, let's type a question mark in front of a function.
+
+For example, type a question mark infront of `lm`. Then click ENTER.
+
+```{r}
+?lm
+```
+
+A window will appear. It will describe the detailed information about
+the function. You can see the default paramaters for such function, such
+as:
+
+`lm(formula, data, subset, weights, na.action,    method = "qr", model = TRUE, x = FALSE, y = FALSE, qr = TRUE,    singular.ok = TRUE, contrasts = NULL, offset, ...)`
+
+You will see arguments for each parameters:
+
+-   formula
+-   data
+-   subsets
+-   weight
+
+and others
+
+## RStudio IDE
+
+RStudio is an integrated development environment (IDE) for R and Python.
+It includes a console, syntax-highlighting editor that supports direct
+code execution, and tools for plotting, history, debugging, and
+workspace management. RStudio is available in open source and commercial
+editions and runs on the desktop (Windows, Mac, and Linux).
+
+There are a few ways to use RStudio:
+
+-   Install it on your computer
+-   Use it on the Cloud (POSIT, Amazon, Microsoft, Saturn Cloud)
+-   Install and use it on a server (RStudio Workbench)
+
+### Hands on with RStudio IDE
+
+-   Prepare the R environment
+
+Steps:
+
+-   Create a new RStudio project
+-   Load required R libraries
+
+```{r}
+library(tidyverse) #data wrangling and data visualization
+library(haven) #read statistical data
+library(broom) #tidier results
+library(gtsummary) #to perform EDA
+library(fpp3) #for time series and forecasting
+```
+
+If you received error `there is no package called XXXXXX` then install
+the package first then run the `library` function again
+
+![Error when package not yet
+installed](images/nopackage.png){width="501"}
+
+-   Read data
+
+First, we read data that we want to analyze into R. In this example, we
+will read a file named `imm23.dta` that sits in a folder named
+`datasets`.
+
+R then will convert the data into an object named as `imm`. You are free
+to write any name to represent the data.
+
+```{r}
+dataset <- read_csv('health_dataset.csv')
+```
+
+You may check the columns and rows of the datasets:
+
+-   columns are variables
+-   rows are observations
+
+```{r}
+glimpse(dataset)
+```
+
+-   Explore data
+
+You must always explore your data. Examine each variable and each
+observation.
+
+```{r}
+dataset |> 
+  tbl_summary(by = sex)
+```
+
+## Example: Revision on linear regression
+
+- Estimation from linear regression in R
+
+Let's show you how to run a linear regression model. From the analysis,
+we will be able to estimate the regression parameters.
+
+-   Constant only model
+
+In the constant only model, we choose only the dependent variable. And
+we only have one dependent variable `match`.
+
+```{r}
+mod0 <- lm(hba1c ~ 1, data = dataset)
+summary(mod0)
+```
+
+### Univariable model
+
+In univariable model, we specify
+
+-   one dependent variable
+-   one covariate or independent variable
+
+```{r}
+mod1 <- lm(hba1c ~ fbs, data = dataset)
+summary(mod1)
+```
+
+### Multivariable model
+
+Now, we let's estimate a multivariable model. A multivaribale model has
+one dependent variable and more than one independent variables. For
+example:
+
+-   One dependent variable: math
+-   Two covariates: fbs, bmi
+
+```{r}
+mod2 <- lm(hba1c ~ fbs + obese, data = dataset)
+summary(mod2)
+```
+
+## Quick tutorial for fpp3 package 
+
+- For more info read 
+  - the [fpp3 documentation](https://pkg.robjhyndman.com/fpp3/) 
+  - the online Forecasting Principle and Practice [book](https://otexts.com/fpp3/) 
+
+- load library
+
+```{r}
+library(fpp3)
+```
+
+- read a built in data named `aus_retail`
+
+```{r}
+aus_retail |>
+  slice_head(n=4) |>
+  View()
+```
+
+There are 5 variables. 
+
+  - Time variable is `Month`
+  - Outcome variable is `Turnover`
+
+- Make a time series plot for `Series ID`A3349640L
+
+```{r}
+aus_retail |>
+  filter(`Series ID`=="A3349640L") |>
+  autoplot(Turnover)
+```
+
+- Make a forecast
+
+  - for `Series ID` A3349640L
+  - using ETS model
+  - for 2 years ahead
+
+```{r}
+aus_retail |>
+  filter(`Series ID`=="A3349640L") |>
+  model(ETS(Turnover)) |>
+  forecast(h = "2 years")
+```
+
+
+## Reflection
+
+-   Could you access our course?
+-   What do you think would be your main challenges in running R and
+    RStudio?
+-   Are you interested to run R on your machine?
+-   How would you get help if stuck with analysis?
+-   Have you tried generative AI such as chatGPT?
+-   What is an R package?
+-   What is an R code?
+-   What is a function?
+-   What contains in a function?
